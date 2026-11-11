@@ -12,6 +12,10 @@ class MicrophoneInfo:
     available: bool = True
     sample_rate: int = 48000
 
+    @property
+    def label(self) -> str:
+        return f"{self.name} ({self.device_id})" if self.device_id and self.device_id != self.name else self.name
+
 
 class AudioVUMeter:
     def __init__(self) -> None:
@@ -23,7 +27,7 @@ class AudioVUMeter:
 
 
 class AudioManager:
-    """List and validate microphones."""
+    """List and validate microphone sources."""
 
     def __init__(self, source: str | None = None) -> None:
         self.source = source
@@ -33,6 +37,7 @@ class AudioManager:
         pactl = shutil.which("pactl")
         if not pactl:
             return [MicrophoneInfo("System default", "default", True, 48000)]
+
         result = subprocess.run(
             [pactl, "list", "short", "sources"],
             capture_output=True,
@@ -42,12 +47,20 @@ class AudioManager:
         lines = result.stdout.splitlines()
         devices: list[MicrophoneInfo] = []
         for line in lines:
+            if not line.strip():
+                continue
             pieces = line.split()
-            if len(pieces) >= 2:
-                device_id = pieces[1]
-                name = pieces[-1]
-                devices.append(MicrophoneInfo(name=name, device_id=device_id, sample_rate=48000))
-        return devices or [MicrophoneInfo("System default", "default", True, 48000)]
+            if len(pieces) < 2:
+                continue
+            device_id = pieces[1]
+            name = pieces[1]
+            if len(pieces) >= 3:
+                name = " ".join(pieces[1:])
+            devices.append(MicrophoneInfo(name=name, device_id=device_id, sample_rate=48000))
+
+        if not devices:
+            return [MicrophoneInfo("System default", "default", True, 48000)]
+        return devices
 
     def list_microphones(self) -> list[MicrophoneInfo]:
         return self._list_pulse_sources()

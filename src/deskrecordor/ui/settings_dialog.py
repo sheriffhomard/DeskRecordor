@@ -1,9 +1,12 @@
 from __future__ import annotations
 
-class SettingsDialog:
-    """Placeholder settings dialog for the GTK application."""
+from typing import Any
 
-    def __init__(self, settings=None) -> None:
+
+class SettingsDialog:
+    """Minimal settings dialog for the GTK application."""
+
+    def __init__(self, settings: Any = None) -> None:
         self.settings = settings
 
     def show(self) -> None:

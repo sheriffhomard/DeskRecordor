@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+
 class VUMeter:
     """Simple text-based vumeter used when GTK is unavailable."""
 
