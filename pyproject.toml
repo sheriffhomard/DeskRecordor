@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "deskrecordor"
-version = "0.1.0"
+version = "0.2.0"
 description = "Desktop screen and voice recorder for Debian"
 readme = "README.md"
 requires-python = ">=3.10"
