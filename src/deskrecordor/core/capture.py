@@ -5,6 +5,8 @@ import os
 import shutil
 import subprocess
 
+from deskrecordor.services.portal_service import PortalService
+
 
 @dataclass
 class MonitorInfo:
@@ -24,6 +26,12 @@ class ScreenCapture:
 
     @staticmethod
     def list_monitors() -> list[MonitorInfo]:
+        if os.environ.get("WAYLAND_DISPLAY"):
+            portal = PortalService.request_screen_capture()
+            if portal.get("available"):
+                return [MonitorInfo("Wayland desktop", "wayland-portal", 1920, 1080, primary=True)]
+            return [MonitorInfo("Wayland primary", "wayland-default", 1920, 1080, primary=True)]
+
         xrandr = shutil.which("xrandr")
         if xrandr:
             result = subprocess.run([xrandr], capture_output=True, text=True, check=False)
@@ -57,8 +65,6 @@ class ScreenCapture:
             if monitors:
                 return monitors
 
-        if os.environ.get("WAYLAND_DISPLAY"):
-            return [MonitorInfo("Wayland primary", "wayland-default", 1920, 1080, primary=True)]
         return [MonitorInfo("Default display", "default", 1920, 1080, primary=True)]
 
     @staticmethod
@@ -74,6 +80,16 @@ class ScreenCapture:
 
     @staticmethod
     def ffmpeg_screen_input(monitor: MonitorInfo | None = None) -> list[str]:
+        if os.environ.get("WAYLAND_DISPLAY"):
+            selected = monitor or MonitorInfo("Wayland primary", "wayland-default", 1920, 1080, True)
+            pipewire_source = PortalService.default_pipewire_source()
+            return [
+                "-f",
+                "pipewire",
+                "-i",
+                pipewire_source,
+            ]
+
         display = os.environ.get("DISPLAY") or ":0"
         selected = monitor or MonitorInfo("Default display", display, 1920, 1080, True)
         if os.environ.get("DISPLAY"):
