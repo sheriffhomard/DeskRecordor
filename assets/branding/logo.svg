@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="150" viewBox="0 0 600 150" role="img" aria-labelledby="title description">
+  <title id="title">DeskRecordor</title>
+  <desc id="description">A minimal monitor icon with a red recording dot, beside the DeskRecordor name.</desc>
+  <g fill="none" stroke="#5267D8" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
+    <rect x="22" y="24" width="112" height="78" rx="12"/>
+    <path d="M78 103v19m-25 0h50"/>
+  </g>
+  <circle cx="109" cy="45" r="10" fill="#E35B62"/>
+  <text x="164" y="82" fill="#202936" font-family="Inter, system-ui, sans-serif" font-size="54" font-weight="700">DeskRecordor</text>
+  <text x="168" y="116" fill="#667085" font-family="Inter, system-ui, sans-serif" font-size="18" letter-spacing="2">SCREEN + MICROPHONE</text>
+</svg>

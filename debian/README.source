@@ -1,0 +1,2 @@
+This package uses the standard Debian pybuild PEP 517 build system. Run
+dpkg-buildpackage from the source root to build the binary package.

@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=DeskRecordor
+Exec=python -m deskrecordor
+Type=Application
+Categories=AudioVideo;Recorder;

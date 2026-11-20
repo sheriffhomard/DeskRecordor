@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -11,6 +11,9 @@ requires-python = ">=3.10"
 authors = [{ name = "DeskRecordor Team" }]
 license = { text = "MIT" }
 dependencies = []
+
+[project.scripts]
+deskrecordor = "deskrecordor.main:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0.0"]

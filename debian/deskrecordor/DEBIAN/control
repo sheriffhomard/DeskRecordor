@@ -1,0 +1,15 @@
+Package: deskrecordor
+Version: 0.2.0-2
+Architecture: all
+Maintainer: DeskRecordor contributors <sheriffhomard@users.noreply.github.com>
+Installed-Size: 81
+Depends: python3:any, ffmpeg, gir1.2-adw-1, gir1.2-gtk-4.0, python3-gi, xdg-desktop-portal
+Recommends: pulseaudio-utils, pipewire-pulse | pulseaudio, xdg-desktop-portal-gnome | xdg-desktop-portal-gtk
+Section: video
+Priority: optional
+Homepage: https://github.com/sheriffhomard/DeskRecordor
+Description: GTK screen and microphone recorder prototype
+ DeskRecordor is an early-stage desktop screen and microphone recorder.
+ .
+ This package provides a GTK 4 and Libadwaita interface and an FFmpeg-based
+ capture prototype. The Wayland portal recording flow is not yet complete.

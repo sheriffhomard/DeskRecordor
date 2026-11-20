@@ -1,0 +1,63 @@
+Metadata-Version: 2.4
+Name: deskrecordor
+Version: 0.2.0
+Summary: Desktop screen and voice recorder for Debian
+Author: DeskRecordor Team
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0.0; extra == "dev"
+Dynamic: license-file
+
+# DeskRecordor
+
+DeskRecordor is an early-stage GTK 4 and Libadwaita screen and microphone
+recorder for Debian 12 and 13.
+
+> **Development status:** the GTK interface and an FFmpeg-based capture
+> prototype are present. X11 capture is experimental; Wayland portal capture
+> is not yet a complete end-to-end recording flow. Test carefully before
+> relying on recordings.
+
+## Install a Debian package
+
+Download a `.deb` from the [GitHub releases](https://github.com/sheriffhomard/DeskRecordor/releases),
+then install it with APT so Debian can resolve its dependencies:
+
+```bash
+sudo apt install ./deskrecordor_VERSION_all.deb
+```
+
+The package requires GTK 4, Libadwaita, FFmpeg and the desktop portal. A
+compatible portal backend and PipeWire/PulseAudio service must also be
+available in the desktop session.
+
+To build a package locally, install the Debian build dependencies and run:
+
+```bash
+sudo apt install build-essential debhelper dh-python pybuild-plugin-pyproject \
+  python3-all python3-setuptools python3-build python3-installer
+./build-deb.sh
+sudo apt install ./dist/deskrecordor_0.2.0-2_all.deb
+```
+
+## Development
+
+Python 3.10 or later is required. To run the current test suite:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+pytest
+```
+
+The package uses a `src/` layout. To run the application during development:
+
+```bash
+PYTHONPATH=src python -m deskrecordor
+```
+
+See `docs/` for the project brief and initial architecture notes.

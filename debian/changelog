@@ -1,0 +1,7 @@
+deskrecordor (0.2.0-2) unstable; urgency=medium
+
+  * Add standard Debian source packaging and APT dependency metadata.
+  * Install the DeskRecordor console launcher and desktop entry.
+  * Document the experimental state of Wayland capture.
+
+ -- DeskRecordor contributors <sheriffhomard@users.noreply.github.com>  Wed, 11 Nov 2026 15:10:00 +0100
