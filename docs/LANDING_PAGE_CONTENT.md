@@ -13,7 +13,7 @@ are already available.
   recording less complicated than a streaming or video-editing suite. It
   targets Debian desktops and is designed around local files and system
   capture permissions. The current version remains experimental; reliable
-  recording and complete Wayland portal support are not yet established.
+  end-to-end recording and desktop compatibility are not yet established.
 
 ## Audience and value
 
@@ -25,12 +25,13 @@ are already available.
 
 ## Verified project details
 
-- **Current GitHub release:** 0.2.0
+- **Current GitHub release:** 0.2.1
 - **License:** MIT
 - **Languages / UI:** Python, GTK 4 and Libadwaita
-- **Capture components:** FFmpeg and PulseAudio-compatible input code;
-  end-to-end operation is not verified.
-- **Wayland:** portal integration is incomplete; do not advertise as supported.
+- **Capture components:** FFmpeg, GStreamer/PipeWire, and PulseAudio-compatible
+  input; end-to-end operation is not verified.
+- **Wayland:** ScreenCast portal capture is implemented, but has not yet been
+  validated on GNOME or KDE.
 - **Compatibility:** Debian 12 and 13 are targets. Only a Debian 13 build,
   package dependency simulation, and GTK-window smoke check have been done.
 - **Repository:** <https://github.com/sheriffhomard/DeskRecordor>

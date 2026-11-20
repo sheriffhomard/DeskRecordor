@@ -1,4 +1,4 @@
 #!/bin/sh
 set -eu
 
-python3 -c 'from deskrecordor import __version__; from deskrecordor.services.portal_service import PortalService; assert __version__ == "0.2.0"; assert callable(PortalService.is_available)'
+python3 -c 'from deskrecordor import __version__; from deskrecordor.services.portal_service import PortalService; assert __version__ == "0.2.1"; assert callable(PortalService.is_available)'

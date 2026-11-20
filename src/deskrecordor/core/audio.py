@@ -4,6 +4,8 @@ from dataclasses import dataclass
 import shutil
 import subprocess
 
+from deskrecordor.utils.logger import get_logger
+
 
 @dataclass
 class MicrophoneInfo:
@@ -31,6 +33,7 @@ class AudioManager:
 
     def __init__(self, source: str | None = None) -> None:
         self.source = source
+        self._logger = get_logger(__name__)
 
     @staticmethod
     def _list_pulse_sources() -> list[MicrophoneInfo]:
@@ -38,12 +41,17 @@ class AudioManager:
         if not pactl:
             return [MicrophoneInfo("System default", "default", True, 48000)]
 
-        result = subprocess.run(
-            [pactl, "list", "short", "sources"],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
+        try:
+            result = subprocess.run(
+                [pactl, "list", "short", "sources"],
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=3,
+            )
+        except subprocess.TimeoutExpired:
+            get_logger(__name__).exception("Timed out while listing microphone sources")
+            return [MicrophoneInfo("Microphone detection timed out", "default", False, 48000)]
         lines = result.stdout.splitlines()
         devices: list[MicrophoneInfo] = []
         for line in lines:
@@ -53,13 +61,13 @@ class AudioManager:
             if len(pieces) < 2:
                 continue
             device_id = pieces[1]
-            name = pieces[1]
-            if len(pieces) >= 3:
-                name = " ".join(pieces[1:])
+            if device_id.endswith(".monitor"):
+                continue
+            name = device_id
             devices.append(MicrophoneInfo(name=name, device_id=device_id, sample_rate=48000))
 
         if not devices:
-            return [MicrophoneInfo("System default", "default", True, 48000)]
+            return [MicrophoneInfo("Aucun microphone d’entrée détecté", "default", False, 48000)]
         return devices
 
     def list_microphones(self) -> list[MicrophoneInfo]:
@@ -67,12 +75,29 @@ class AudioManager:
 
     def default_microphone(self) -> MicrophoneInfo:
         microphones = self.list_microphones()
-        if not microphones:
-            return MicrophoneInfo("System default", "default", False, 48000)
         if self.source:
             for item in microphones:
                 if item.device_id == self.source or item.name == self.source:
                     return item
+        pactl = shutil.which("pactl")
+        if pactl:
+            try:
+                result = subprocess.run(
+                    [pactl, "get-default-source"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=3,
+                )
+                default_source = result.stdout.strip()
+                for item in microphones:
+                    if item.device_id == default_source:
+                        return item
+            except subprocess.TimeoutExpired:
+                self._logger.exception("Timed out while checking default microphone")
+                pass
+        if not microphones:
+            return MicrophoneInfo("Aucun microphone d’entrée détecté", "default", False, 48000)
         return microphones[0]
 
     def test_microphone(self, device_id: str | None = None) -> bool:

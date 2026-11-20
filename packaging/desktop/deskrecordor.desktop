@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=DeskRecordor
-Exec=python -m deskrecordor
+Exec=deskrecordor
+Terminal=false
 Type=Application
 Categories=AudioVideo;Recorder;

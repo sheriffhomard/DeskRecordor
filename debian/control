@@ -20,6 +20,9 @@ Depends:
  ${misc:Depends},
  ${python3:Depends},
  ffmpeg,
+ gstreamer1.0-pipewire,
+ gstreamer1.0-plugins-base,
+ gstreamer1.0-tools,
  gir1.2-adw-1,
  gir1.2-gtk-4.0,
  python3-gi,
@@ -32,4 +35,5 @@ Description: GTK screen and microphone recorder prototype
  DeskRecordor is an early-stage desktop screen and microphone recorder.
  .
  This package provides a GTK 4 and Libadwaita interface and an FFmpeg-based
- capture prototype. The Wayland portal recording flow is not yet complete.
+ capture prototype. Wayland screen sharing uses the desktop portal and
+ PipeWire through GStreamer.

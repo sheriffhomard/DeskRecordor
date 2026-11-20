@@ -1,3 +1,59 @@
+deskrecordor (0.2.1-1) unstable; urgency=medium
+
+  * Complete the Wayland ScreenCast portal and GStreamer/PipeWire capture path.
+  * Add a draggable title bar, window controls, built-in help, onboarding, and tooltips.
+  * Improve capture startup diagnostics, cancellation, and process cleanup.
+
+ -- DeskRecordor contributors <sheriffhomard@users.noreply.github.com>  Fri, 20 Nov 2026 22:31:00 +0100
+
+deskrecordor (0.2.0-8) unstable; urgency=medium
+
+  * Use Adw.ToolbarView for the header bar instead of the unsupported window titlebar API.
+
+ -- DeskRecordor contributors <sheriffhomard@users.noreply.github.com>  Fri, 20 Nov 2026 22:25:00 +0100
+
+deskrecordor (0.2.0-7) unstable; urgency=medium
+
+  * Add a draggable title bar with minimize, maximize/restore, help, and guide controls.
+  * Add built-in documentation, application version, and legal notice.
+  * Add tooltips to recording controls and update the package version metadata.
+
+ -- DeskRecordor contributors <sheriffhomard@users.noreply.github.com>  Fri, 20 Nov 2026 22:20:00 +0100
+
+deskrecordor (0.2.0-6) unstable; urgency=medium
+
+  * Fix PipeWire caps negotiation by converting before applying the frame rate.
+  * Wait for initial video data before reporting capture as started.
+
+ -- DeskRecordor contributors <sheriffhomard@users.noreply.github.com>  Fri, 20 Nov 2026 21:23:00 +0100
+
+deskrecordor (0.2.0-5) unstable; urgency=medium
+
+  * Complete the Wayland ScreenCast portal session and PipeWire stream lifecycle.
+  * Capture PipeWire video with GStreamer and encode it with FFmpeg.
+  * Keep the UI responsive while the user authorizes portal capture.
+  * Add GStreamer PipeWire runtime dependencies.
+
+ -- DeskRecordor contributors <sheriffhomard@users.noreply.github.com>  Fri, 20 Nov 2026 21:15:00 +0100
+
+deskrecordor (0.2.0-4) unstable; urgency=medium
+
+  * Add output directory selection, startup countdown, diagnostics, and emergency quit.
+  * Drain and log FFmpeg output; report failed or prematurely stopped captures.
+  * Exclude PulseAudio monitor sources from microphone selection.
+  * Fail clearly when Wayland capture is requested but not implemented.
+
+ -- DeskRecordor contributors <sheriffhomard@users.noreply.github.com>  Fri, 20 Nov 2026 21:05:00 +0100
+
+deskrecordor (0.2.0-3) unstable; urgency=medium
+
+  * Fix the desktop entry to invoke the installed console script.
+  * Add standard Debian source packaging and APT dependency metadata.
+  * Install the DeskRecordor console launcher and desktop entry.
+  * Document the experimental state of Wayland capture.
+
+ -- DeskRecordor contributors <sheriffhomard@users.noreply.github.com>  Fri, 20 Nov 2026 20:55:00 +0100
+
 deskrecordor (0.2.0-2) unstable; urgency=medium
 
   * Add standard Debian source packaging and APT dependency metadata.

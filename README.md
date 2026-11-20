@@ -16,8 +16,10 @@
 </p>
 
 > **Experimental software:** DeskRecordor has a basic GTK window and an
-> unverified FFmpeg capture prototype. The Wayland portal flow, live microphone
-> meter, settings UI, and reliable end-to-end recording are not complete.
+> experimental capture pipeline. Wayland capture now uses the desktop portal
+> and PipeWire; real-world portal/backend combinations still need validation.
+> The live microphone meter, settings UI, and reliable end-to-end recording
+> are not complete.
 > Do not use it for important recordings yet.
 
 ## Contents
@@ -64,9 +66,11 @@ is pending and how to capture the real application window.
 | Microphone selection | PulseAudio-compatible sources can be listed; source selection and capture are not verified end to end. |
 | Live microphone level | Not implemented; the current meter is not connected to captured audio. |
 | Start, pause, resume and stop | Prototype controls are present; recording integrity and synchronization are not verified. |
-| Local output and automatic filename | Default folder and unique timestamped names are implemented; successful video output is not guaranteed. |
+| Startup countdown and elapsed timer | A 3-second countdown and capture-process health checks are present. They do not prove video validity. |
+| Local output and automatic filename | Destination folder can be selected; unique timestamped names are implemented. Successful video output is not guaranteed. |
+| Diagnostic logs and emergency quit | Rotating local logs and a forced FFmpeg termination control are available. |
 | Settings window | Not implemented. JSON settings storage exists, but not all settings are exposed in the UI. |
-| Wayland screen capture | Not implemented end to end. The current portal code does not complete the portal selection/start/stream lifecycle. |
+| Wayland screen capture | Uses the ScreenCast portal for user consent and GStreamer/PipeWire for video. Desktop-specific validation is still required. |
 | Debian package | Standard Debian packaging is present in this repository; a local build and APT dependency simulation have been verified on Debian 13. |
 
 These are implementation notes, not a claim that every control works reliably.
@@ -79,8 +83,8 @@ Debian 12 and 13 are **targets**, not fully validated support claims.
 | Environment | Validation performed | Status |
 |---|---|---|
 | Debian 13, GNOME/X11 | GTK window opened; package built and APT install simulated. Recording was not validated. | Partial smoke test |
-| Debian 13, GNOME/Wayland | No end-to-end portal capture test. | Not tested |
-| Debian 13, KDE/Wayland | No end-to-end portal capture test. | Not tested |
+| Debian 13, GNOME/Wayland | Portal and PipeWire code paths are implemented; no real desktop end-to-end test yet. | Not tested |
+| Debian 13, KDE/Wayland | Portal and PipeWire code paths are implemented; no real desktop end-to-end test yet. | Not tested |
 | Debian 12 | No distribution test performed. | Not tested |
 
 ## Installation
@@ -103,7 +107,7 @@ Build the package and checksum from the repository root:
 Install the resulting package with APT so it can resolve runtime dependencies:
 
 ```bash
-sudo apt install ./dist/deskrecordor_0.2.0-2_all.deb
+sudo apt install ./dist/deskrecordor_0.2.1-1_all.deb
 ```
 
 Remove it with:
@@ -112,9 +116,7 @@ Remove it with:
 sudo apt remove deskrecordor
 ```
 
-The repository's GitHub Releases page contains an earlier `v0.2.0` package
-that predates the standard Debian dependency metadata. Prefer building the
-current package from source until a newer package is published.
+The GitHub Releases page contains tagged source and Debian package builds.
 
 ### Run from source
 
@@ -139,9 +141,10 @@ not imply that a valid video will be produced:
 
 1. Launch `deskrecordor` from a graphical session.
 2. Review the displayed monitor and microphone entries.
-3. Use **ENREGISTRER** to attempt a capture.
-4. Use **PAUSE** / **REPRENDRE** or **ARRÊTER** to exercise the prototype controls.
-5. The configured default output folder is `~/Videos/DeskRecordor/`.
+3. Choose a destination with **Choisir…** or keep `~/Videos/DeskRecordor/`.
+4. Use **ENREGISTRER** to start the three-second countdown and attempt a capture.
+5. Use **PAUSE** / **REPRENDRE** or **ARRÊTER** to exercise the prototype controls.
+6. Open **JOURNAL** for local diagnostics, or **QUITTER / INTERROMPRE** to force-stop the capture pipeline.
 
 The UI does not yet expose all settings or reliably report finalization
 results. Check output files before relying on them.
@@ -152,8 +155,8 @@ results. Check output files before relying on them.
 - GTK 4, Libadwaita and PyGObject for the desktop window
 - FFmpeg for the experimental capture pipeline
 - PulseAudio-compatible input for the current audio path
-- XDG Desktop Portal / PipeWire integration is incomplete; the project does not
-  yet complete a Wayland screen-capture session
+- Wayland capture requests explicit user consent through XDG Desktop Portal;
+  recordings remain local and use GStreamer/PipeWire for screen video
 - Debian `debhelper` and `pybuild` for packaging
 
 See [Architecture](docs/ARCHITECTURE.md) for component boundaries and current
@@ -169,8 +172,8 @@ are stored under the user's XDG configuration directory.
 This is a repository-level code review, not a network or dependency audit.
 DeskRecordor interacts with local desktop, audio, and capture services; their
 behavior and the behavior of system dependencies are outside that statement.
-Wayland capture must use a supported desktop portal and user-granted
-permissions; a complete portal recording flow is still pending.
+Wayland capture requires a supported desktop portal and user-granted
+permissions.
 
 ## Roadmap
 
@@ -178,7 +181,7 @@ permissions; a complete portal recording flow is still pending.
 |---|---|---|
 | 0.1 | Initial Python scaffold and state model | Released |
 | 0.2 | GTK prototype, capture adapters and early Debian package | Released; experimental |
-| 0.3 | Complete portal lifecycle, genuine audio metering, reliable finalization and recovery | Planned |
+| 0.3 | Validate the portal lifecycle, add genuine audio metering, reliable finalization and recovery | In progress |
 | 1.0 | Tested Debian desktop support and dependable recording workflow | Planned |
 
 See the [detailed roadmap](docs/ROADMAP.md).

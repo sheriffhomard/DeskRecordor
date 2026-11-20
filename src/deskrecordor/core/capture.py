@@ -5,8 +5,6 @@ import os
 import shutil
 import subprocess
 
-from deskrecordor.services.portal_service import PortalService
-
 
 @dataclass
 class MonitorInfo:
@@ -18,6 +16,8 @@ class MonitorInfo:
 
     @property
     def resolution(self) -> str:
+        if self.width <= 0 or self.height <= 0:
+            return "sélection via le portail"
         return f"{self.width}x{self.height}"
 
 
@@ -25,16 +25,29 @@ class ScreenCapture:
     """Describe available displays and select the default monitor."""
 
     @staticmethod
+    def uses_wayland_portal() -> bool:
+        return bool(
+            os.environ.get("WAYLAND_DISPLAY")
+            and os.environ.get("GDK_BACKEND") != "x11"
+        )
+
+    @staticmethod
     def list_monitors() -> list[MonitorInfo]:
-        if os.environ.get("WAYLAND_DISPLAY"):
-            portal = PortalService.request_screen_capture()
-            if portal.get("available"):
-                return [MonitorInfo("Wayland desktop", "wayland-portal", 1920, 1080, primary=True)]
-            return [MonitorInfo("Wayland primary", "wayland-default", 1920, 1080, primary=True)]
+        if ScreenCapture.uses_wayland_portal():
+            return [MonitorInfo("Écran via le portail Wayland", "wayland-portal", 0, 0, primary=True)]
 
         xrandr = shutil.which("xrandr")
         if xrandr:
-            result = subprocess.run([xrandr], capture_output=True, text=True, check=False)
+            try:
+                result = subprocess.run(
+                    [xrandr],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=3,
+                )
+            except subprocess.TimeoutExpired:
+                return [MonitorInfo("Display detection timed out", "default", 1920, 1080, primary=True)]
             lines = result.stdout.splitlines()
             monitors: list[MonitorInfo] = []
             for line in lines:
@@ -80,15 +93,8 @@ class ScreenCapture:
 
     @staticmethod
     def ffmpeg_screen_input(monitor: MonitorInfo | None = None) -> list[str]:
-        if os.environ.get("WAYLAND_DISPLAY"):
-            selected = monitor or MonitorInfo("Wayland primary", "wayland-default", 1920, 1080, True)
-            pipewire_source = PortalService.default_pipewire_source()
-            return [
-                "-f",
-                "pipewire",
-                "-i",
-                pipewire_source,
-            ]
+        if ScreenCapture.uses_wayland_portal():
+            raise RuntimeError("La capture Wayland doit être démarrée via le portail ScreenCast.")
 
         display = os.environ.get("DISPLAY") or ":0"
         selected = monitor or MonitorInfo("Default display", display, 1920, 1080, True)

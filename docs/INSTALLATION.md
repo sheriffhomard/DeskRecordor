@@ -9,10 +9,10 @@ application's Debian dependencies:
 sudo apt install ./deskrecordor_VERSION_all.deb
 ```
 
-The package declares Python 3, PyGObject, GTK 4, Libadwaita, FFmpeg, and
-xdg-desktop-portal as dependencies. For screen and microphone capture, the
-desktop session must also provide an appropriate portal backend and
-PipeWire/PulseAudio services.
+The package declares Python 3, PyGObject, GTK 4, Libadwaita, FFmpeg, GStreamer
+with its PipeWire plugin, and xdg-desktop-portal as dependencies. For Wayland
+capture, the desktop session must also provide an appropriate portal backend
+and a working PipeWire/PulseAudio service.
 
 ## Build from source
 
@@ -27,7 +27,7 @@ Then run `./build-deb.sh`. The resulting `.deb` and its SHA-256 checksum are
 written to `dist/`. Install the local package with:
 
 ```bash
-sudo apt install ./dist/deskrecordor_0.2.0-2_all.deb
+sudo apt install ./dist/deskrecordor_0.2.1-1_all.deb
 ```
 
 APT installs dependencies from the configured Debian repositories. Installing
